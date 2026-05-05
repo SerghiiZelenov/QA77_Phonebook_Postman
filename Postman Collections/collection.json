@@ -1,0 +1,430 @@
+{
+	"info": {
+		"_postman_id": "51cdd3a9-0ca8-424d-aec9-2f262f5c976c",
+		"name": "phonebook_Zelenov",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "positive",
+					"item": [
+						{
+							"name": "Login registered user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f9900f24-358e-4e43-93c5-ba70002c2926",
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"pm.environment.set(\"token\", jsonData.token);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "dcbfbdf3-64a0-4762-aaa4-dc830968c16c",
+										"exec": [],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "62e4b16e-c48d-4638-94e3-c65c6fd9c744",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"zelenov080@gmail.com\",\n  \"password\": \"Aa12345!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BaseURL}}/v1/user/login/usernamepassword"
+							},
+							"response": []
+						}
+					],
+					"id": "c5ea489b-37c6-445e-951c-a6041e35485f",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "82f24926-4567-4f4d-b640-ae8f512699a6",
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "06b1cc04-a29c-4b74-b786-6d9ed27cdbee",
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Status code name has string\", function () {",
+									"  pm.response.to.have.status(\"OK\");",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "negative",
+					"item": [],
+					"id": "bdca5123-c8e0-4704-8359-daa5e1f9645e"
+				}
+			],
+			"id": "a20220c5-b4c4-4f34-b24d-d013ef9c3dd9"
+		},
+		{
+			"name": "contact",
+			"item": [
+				{
+					"name": "positive",
+					"item": [
+						{
+							"name": "GetAllContacts before add",
+							"id": "66b86420-7ac1-4f66-893c-e390d6ec9a19",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"zelenov080@gmail.com\",\n  \"password\": \"Aa12345!\"\n}"
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "AddContact",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2e32e8e1-8d0c-4899-811c-6c809f418b66",
+										"exec": [
+											"pm.test(\"Body matches string: Contact was added!\", function () {",
+											"  pm.expect(pm.response.text()).to.include(\"Contact was added!\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "b22c6036-8a5b-4bc0-813c-c021debe8460",
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"id": "c3e7644b-5cf5-4585-99a2-b5a0c4bc6b13",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Sergey\",\n  \"lastName\": \"Zelenov\",\n  \"email\": \"zelenov080@gmail.com\",\n  \"phone\": \"01754915101\",\n  \"address\": \"Lörrach\",\n  \"description\": \"QA\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllContacts after adding",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a43b6028-2c58-4ec8-a4ec-81fda0b81bce",
+										"exec": [
+											"//take the first element from contacts array",
+											"let response = pm.response.json();",
+											"let contactId = response.contacts[0].id;",
+											"//save in enviroment ",
+											"pm.environment.set(\"id\", contactId);",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "dc0efbce-609d-4ef0-a592-3f6eabbf14ef",
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"id": "3d2809ac-f6dd-4ae1-bd6d-a7eecf203c0e",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"zelenov080@gmail.com\",\n  \"password\": \"Aa12345!\"\n}"
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateContact",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2e32e8e1-8d0c-4899-811c-6c809f418b66",
+										"exec": [
+											"pm.test(\"API message:Contact was updated\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message).to.eql(\"Contact was updated\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "b22c6036-8a5b-4bc0-813c-c021debe8460",
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"id": "52360971-d03a-4131-92d8-0449f27150e2",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"id\":\"{{id}}\",\n  \"name\": \"Sergey\",\n  \"lastName\": \"Zelenov\",\n  \"email\": \"zelenov080@gmail.com\",\n  \"phone\": \"01754915101\",\n  \"address\": \"Lörrach\",\n  \"description\": \"QA\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BaseURL}}/v1/contacts"
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "954f096c-3d86-4415-b824-b6757a07ec51",
+										"exec": [
+											"pm.test(\"Your test name\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message).to.eql(\"Contact was deleted!\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "bd648216-6167-4436-8ec0-8a3f593933e6",
+										"exec": [],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "dc68356d-7b5b-4c22-bf95-31e7b185fe1c",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": "{{BaseURL}}/v1/contacts/{{id}}"
+							},
+							"response": []
+						}
+					],
+					"id": "87bd0dfd-a72d-4172-856c-11faea233546",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "85d1fc6f-6f8e-428a-9967-6782716a87b2",
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a07c3044-a85d-49c9-b0e5-60283b61cf79",
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code name has string\", function () {",
+									"  pm.response.to.have.status(\"OK\");",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "negative",
+					"item": [],
+					"id": "e41b5290-8b0a-4a33-9ae2-2c09a5cb1d2a"
+				}
+			],
+			"id": "3e716dcf-274e-42cd-8383-2980b755e32d"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "2620f0a4-c753-4f7c-afea-8b8bb5fbf13e",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "f9ffeed1-1a63-4a4b-9d1d-9383adde2416",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"  pm.test(\"Response time is less than 2000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"  });"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseURL",
+			"value": ""
+		},
+		{
+			"key": "id",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
