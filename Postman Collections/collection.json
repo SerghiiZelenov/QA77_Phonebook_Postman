@@ -318,8 +318,32 @@
 									"listen": "prerequest",
 									"script": {
 										"id": "bd648216-6167-4436-8ec0-8a3f593933e6",
-										"exec": [],
-										"type": "text/javascript"
+										"exec": [
+											"pm.sendRequest({",
+											"  url: pm.environment.get(\"BaseURL\") + \"/v1/contacts/\",",
+											"  method: \"GET\",",
+											"  header: {\"Authorization\": pm.environment.get(\"token\")}",
+											"}, function (err, res) {",
+											"  if (err) {",
+											"    console.log(\"Error while requstings contacts\")",
+											"  } else {",
+											"    let data = res.json();",
+											"    if(data.contacts && data.contacts.length > 0 ){",
+											"      let contactID = data.contacts[0].id;",
+											"      pm.environment.set(\"id\", contactID);",
+											"      console.log(\"Contact was added: \", contactID);",
+											"    } else {",
+											"      console.warn(\"Contacts are missing in the response\");",
+											"    }",
+											"  }",
+											"",
+											"}",
+											"",
+											")"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
 									}
 								}
 							],
