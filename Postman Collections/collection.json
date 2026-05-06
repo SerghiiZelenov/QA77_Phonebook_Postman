@@ -344,7 +344,7 @@
 											"*/",
 											"",
 											"pm.sendRequest({",
-											"    url:pm.environment.get(\"BaseUrl\") + \"/v1/contacts/\",",
+											"    url:pm.environment.get(\"BaseURL\") + \"/v1/contacts/\",",
 											"    method: \"GET\",",
 											"    header: {\"Authorization\":pm.environment.get(\"token\")}",
 											"},function (err,res){",
